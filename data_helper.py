@@ -58,14 +58,5 @@ def load_mdsd(domains, n_labeled=None):
     return texts, s_labels, d_labels
 
 
-domain2id = {
-    'apple': 0,
-    'google': 1,
-    'microsoft': 2,
-    'twitter': 3,
-}
-
-sentiment2id = {
-    'positive': 1,
-    'negative': 0,
-}
+if __name__ == '__main__':
+    load_mdsd(domains=DOMAINS)
