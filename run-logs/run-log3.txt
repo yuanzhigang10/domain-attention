@@ -1,0 +1,169 @@
+loading data: Multi-Domain Sentiment Dataset v2
+loading data from /home/peteryuan/datasets/mdsd-v2/sorted_data
+ - loading books positive: 1000 texts
+ - loading books negative: 1000 texts
+ - loading dvd positive: 1000 texts
+ - loading dvd negative: 1000 texts
+ - loading electronics positive: 1000 texts
+ - loading electronics negative: 1000 texts
+ - loading kitchen positive: 1000 texts
+ - loading kitchen negative: 1000 texts
+data loaded
+ - texts: 8000
+ - s_labels: 8000
+ - d_labels: 8000
+building vocabulary
+maxlen: 461
+n_words: 45751
+data encoding
+labeled data: domain & train/val/test splitting
+books splitting
+ * all: (2000, 461) (2000,)
+ * X: (1400, 461) (398, 461) (202, 461)
+ * y: (1400,) (398,) (202,)
+dvd splitting
+ * all: (2000, 461) (2000,)
+ * X: (1400, 461) (398, 461) (202, 461)
+ * y: (1400,) (398,) (202,)
+electronics splitting
+ * all: (2000, 461) (2000,)
+ * X: (1400, 461) (398, 461) (202, 461)
+ * y: (1400,) (398,) (202,)
+kitchen splitting
+ * all: (2000, 461) (2000,)
+ * X: (1400, 461) (398, 461) (202, 461)
+ * y: (1400,) (398,) (202,)
+combined labeled data:
+  - train: (5600, 461) (5600, 2) (5600, 4)
+  - val: (1592, 461) (1592, 2) (1592, 4)
+  - test: (808, 461) (808, 2) (808, 4)
+  - test for boo: (202, 461) (202, 2) (202, 4)
+  - test for dvd: (202, 461) (202, 2) (202, 4)
+  - test for ele: (202, 461) (202, 2) (202, 4)
+  - test for kit: (202, 461) (202, 2) (202, 4)
+loading word embeddings from glove
+loading glove from /home/peteryuan/datasets/glove/glove.6B.300d.txt
+glove info: 35088 words, 300 dims
+processing embedding matrix
+
+building the model
+____________________________________________________________________________________________________
+Layer (type)                     Output Shape          Param #     Connected to                     
+====================================================================================================
+input_1 (InputLayer)             (None, 461)           0                                            
+____________________________________________________________________________________________________
+embedding_1 (Embedding)          (None, 461, 300)      13725300    input_1[0][0]                    
+____________________________________________________________________________________________________
+spatial_dropout1d_1 (SpatialDrop (None, 461, 300)      0           embedding_1[0][0]                
+____________________________________________________________________________________________________
+bidirectional_1 (Bidirectional)  (None, 600)           1442400     spatial_dropout1d_1[0][0]        
+____________________________________________________________________________________________________
+bidirectional_2 (Bidirectional)  (None, 461, 600)      1442400     spatial_dropout1d_1[0][0]        
+____________________________________________________________________________________________________
+dense_1 (Dense)                  (None, 100)           60100       bidirectional_1[0][0]            
+____________________________________________________________________________________________________
+time_distributed_1 (TimeDistribu (None, 461, 100)      60100       bidirectional_2[0][0]            
+____________________________________________________________________________________________________
+dropout_1 (Dropout)              (None, 100)           0           dense_1[0][0]                    
+____________________________________________________________________________________________________
+dot_1 (Dot)                      (None, 461)           0           time_distributed_1[0][0]         
+                                                                   dropout_1[0][0]                  
+____________________________________________________________________________________________________
+activation_1 (Activation)        (None, 461)           0           dot_1[0][0]                      
+____________________________________________________________________________________________________
+dot_2 (Dot)                      (None, 600)           0           bidirectional_2[0][0]            
+                                                                   activation_1[0][0]               
+____________________________________________________________________________________________________
+dense_3 (Dense)                  (None, 100)           60100       dot_2[0][0]                      
+____________________________________________________________________________________________________
+dropout_2 (Dropout)              (None, 100)           0           dense_3[0][0]                    
+____________________________________________________________________________________________________
+s_pred (Dense)                   (None, 2)             202         dropout_2[0][0]                  
+____________________________________________________________________________________________________
+d_pred (Dense)                   (None, 4)             404         dropout_1[0][0]                  
+====================================================================================================
+Total params: 16,791,006
+Trainable params: 16,791,006
+Non-trainable params: 0
+____________________________________________________________________________________________________
+
+training model
+Train on 5600 samples, validate on 1592 samples
+Epoch 1/100
+- updates: 1e-3 * [-, -, -, -, -, -, -, -, -, -, -, -, -, -, -]
+285s - loss: 0.7416 - s_pred_loss: 0.6872 - d_pred_loss: 1.3587 - s_pred_acc: 0.5448 - d_pred_acc: 0.3412 - val_loss: 0.7589 - val_s_pred_loss: 0.7063 - val_d_pred_loss: 1.3136 - val_s_pred_acc: 0.5132 - val_d_pred_acc: 0.5101
+Epoch 2/100
+- updates: 1e-3 * [-, 0.2753, -, 3.1786, 41.3754, 29.7961, 25.7208, -, -, -, -, 32.3331, -, 31.1181, 68.5479]
+291s - loss: 0.7127 - s_pred_loss: 0.6636 - d_pred_loss: 1.2267 - s_pred_acc: 0.6221 - d_pred_acc: 0.4884 - val_loss: 0.6607 - val_s_pred_loss: 0.6221 - val_d_pred_loss: 0.9656 - val_s_pred_acc: 0.7067 - val_d_pred_acc: 0.5452
+Epoch 3/100
+- updates: 1e-3 * [-, 0.4527, -, 2.1099, 39.8646, 23.7839, 24.0163, -, -, -, -, 26.8536, -, 22.5297, 46.2532]
+290s - loss: 0.6666 - s_pred_loss: 0.6270 - d_pred_loss: 0.9896 - s_pred_acc: 0.6716 - d_pred_acc: 0.5641 - val_loss: 0.6133 - val_s_pred_loss: 0.5829 - val_d_pred_loss: 0.7577 - val_s_pred_acc: 0.7456 - val_d_pred_acc: 0.7431
+Epoch 4/100
+- updates: 1e-3 * [-, 0.5348, -, 1.8473, 32.9927, 20.0398, 23.1366, -, -, -, -, 28.1451, -, 27.8708, 33.3354]
+291s - loss: 0.6253 - s_pred_loss: 0.5920 - d_pred_loss: 0.8325 - s_pred_acc: 0.6970 - d_pred_acc: 0.6534 - val_loss: 0.5576 - val_s_pred_loss: 0.5320 - val_d_pred_loss: 0.6415 - val_s_pred_acc: 0.7513 - val_d_pred_acc: 0.7531
+Epoch 5/100
+- updates: 1e-3 * [-, 0.6005, -, 1.8825, 30.5428, 16.9994, 21.3080, -, -, -, -, 29.9723, -, 27.2318, 25.3426]
+290s - loss: 0.5800 - s_pred_loss: 0.5537 - d_pred_loss: 0.6581 - s_pred_acc: 0.7191 - d_pred_acc: 0.7304 - val_loss: 0.5502 - val_s_pred_loss: 0.5289 - val_d_pred_loss: 0.5340 - val_s_pred_acc: 0.7437 - val_d_pred_acc: 0.8241
+Epoch 6/100
+- updates: 1e-3 * [-, 0.5978, -, 1.7702, 27.6689, 13.4777, 20.9392, -, -, -, -, 28.1829, -, 26.6853, 15.9576]
+289s - loss: 0.5540 - s_pred_loss: 0.5300 - d_pred_loss: 0.5994 - s_pred_acc: 0.7391 - d_pred_acc: 0.7700 - val_loss: 0.5186 - val_s_pred_loss: 0.5025 - val_d_pred_loss: 0.4011 - val_s_pred_acc: 0.7538 - val_d_pred_acc: 0.8656
+Epoch 7/100
+- updates: 1e-3 * [-, 0.6153, -, 1.9288, 28.3260, 12.6457, 21.4286, -, -, -, -, 23.8172, -, 17.5610, 13.9321]
+289s - loss: 0.5198 - s_pred_loss: 0.4994 - d_pred_loss: 0.5094 - s_pred_acc: 0.7595 - d_pred_acc: 0.8066 - val_loss: 0.4849 - val_s_pred_loss: 0.4699 - val_d_pred_loss: 0.3771 - val_s_pred_acc: 0.7776 - val_d_pred_acc: 0.8769
+Epoch 8/100
+- updates: 1e-3 * [-, 0.6161, -, 1.8342, 27.1346, 12.5979, 23.4609, -, -, -, -, 26.6592, -, 17.0281, 13.4768]
+292s - loss: 0.4943 - s_pred_loss: 0.4751 - d_pred_loss: 0.4799 - s_pred_acc: 0.7812 - d_pred_acc: 0.8262 - val_loss: 0.4618 - val_s_pred_loss: 0.4451 - val_d_pred_loss: 0.4181 - val_s_pred_acc: 0.7971 - val_d_pred_acc: 0.8430
+Epoch 9/100
+- updates: 1e-3 * [-, 0.6357, -, 1.7790, 30.1896, 13.2323, 24.3138, -, -, -, -, 25.5778, -, 18.2567, 13.6420]Using TensorFlow backend.
+
+296s - loss: 0.4691 - s_pred_loss: 0.4518 - d_pred_loss: 0.4327 - s_pred_acc: 0.7920 - d_pred_acc: 0.8407 - val_loss: 0.4647 - val_s_pred_loss: 0.4469 - val_d_pred_loss: 0.4440 - val_s_pred_acc: 0.7808 - val_d_pred_acc: 0.8266
+Epoch 10/100
+- updates: 1e-3 * [-, 0.6180, -, 1.9143, 30.0176, 11.8034, 22.1506, -, -, -, -, 27.7871, -, 17.9319, 14.1119]
+300s - loss: 0.4542 - s_pred_loss: 0.4365 - d_pred_loss: 0.4419 - s_pred_acc: 0.8011 - d_pred_acc: 0.8409 - val_loss: 0.6462 - val_s_pred_loss: 0.6271 - val_d_pred_loss: 0.4780 - val_s_pred_acc: 0.6966 - val_d_pred_acc: 0.8053
+Epoch 11/100
+- updates: 1e-3 * [-, 0.6057, -, 1.7081, 30.3567, 12.0042, 22.4025, -, -, -, -, 26.2117, -, 16.6404, 12.4886]
+292s - loss: 0.4358 - s_pred_loss: 0.4206 - d_pred_loss: 0.3808 - s_pred_acc: 0.8189 - d_pred_acc: 0.8579 - val_loss: 0.4749 - val_s_pred_loss: 0.4611 - val_d_pred_loss: 0.3452 - val_s_pred_acc: 0.7845 - val_d_pred_acc: 0.8700
+Epoch 12/100
+- updates: 1e-3 * [-, 0.5930, -, 2.0945, 27.5835, 11.8470, 20.6750, -, -, -, -, 25.3257, -, 13.8059, 12.6910]
+299s - loss: 0.4124 - s_pred_loss: 0.3970 - d_pred_loss: 0.3857 - s_pred_acc: 0.8257 - d_pred_acc: 0.8618 - val_loss: 0.4149 - val_s_pred_loss: 0.3919 - val_d_pred_loss: 0.5762 - val_s_pred_acc: 0.8210 - val_d_pred_acc: 0.7933
+Epoch 13/100
+- updates: 1e-3 * [-, 0.5945, -, 2.2389, 27.8596, 11.5272, 20.7242, -, -, -, -, 25.6679, -, 14.2576, 11.8900]
+297s - loss: 0.3818 - s_pred_loss: 0.3670 - d_pred_loss: 0.3694 - s_pred_acc: 0.8396 - d_pred_acc: 0.8598 - val_loss: 0.4192 - val_s_pred_loss: 0.4063 - val_d_pred_loss: 0.3232 - val_s_pred_acc: 0.8216 - val_d_pred_acc: 0.8907
+Epoch 14/100
+- updates: 1e-3 * [-, 0.5804, -, 2.1934, 27.1421, 11.3449, 18.5937, -, -, -, -, 24.3317, -, 13.9177, 10.2182]
+295s - loss: 0.3737 - s_pred_loss: 0.3599 - d_pred_loss: 0.3438 - s_pred_acc: 0.8402 - d_pred_acc: 0.8780 - val_loss: 0.4040 - val_s_pred_loss: 0.3865 - val_d_pred_loss: 0.4362 - val_s_pred_acc: 0.8335 - val_d_pred_acc: 0.8122
+Epoch 15/100
+- updates: 1e-3 * [-, 0.5678, -, 1.9154, 27.1791, 11.2100, 21.1906, -, -, -, -, 22.7782, -, 12.3982, 10.4199]
+304s - loss: 0.3495 - s_pred_loss: 0.3354 - d_pred_loss: 0.3531 - s_pred_acc: 0.8604 - d_pred_acc: 0.8714 - val_loss: 0.4247 - val_s_pred_loss: 0.4135 - val_d_pred_loss: 0.2781 - val_s_pred_acc: 0.8235 - val_d_pred_acc: 0.9001
+Epoch 16/100
+- updates: 1e-3 * [-, 0.5753, -, 2.3253, 27.8688, 12.0527, 21.4505, -, -, -, -, 23.3700, -, 11.4058, 12.2246]
+312s - loss: 0.3394 - s_pred_loss: 0.3264 - d_pred_loss: 0.3253 - s_pred_acc: 0.8596 - d_pred_acc: 0.8864 - val_loss: 0.3649 - val_s_pred_loss: 0.3529 - val_d_pred_loss: 0.3001 - val_s_pred_acc: 0.8361 - val_d_pred_acc: 0.8970
+Epoch 17/100
+- updates: 1e-3 * [-, 0.5564, -, 2.5211, 28.3850, 12.0285, 20.1443, -, -, -, -, 25.7680, -, 17.4203, 10.5183]
+311s - loss: 0.3234 - s_pred_loss: 0.3107 - d_pred_loss: 0.3169 - s_pred_acc: 0.8705 - d_pred_acc: 0.8880 - val_loss: 0.4003 - val_s_pred_loss: 0.3853 - val_d_pred_loss: 0.3737 - val_s_pred_acc: 0.8254 - val_d_pred_acc: 0.8606
+Epoch 18/100
+- updates: 1e-3 * [-, 0.5703, -, 2.6676, 26.3668, 11.8108, 20.6302, -, -, -, -, 23.4758, -, 11.6455, 13.2780]
+311s - loss: 0.3125 - s_pred_loss: 0.3001 - d_pred_loss: 0.3102 - s_pred_acc: 0.8759 - d_pred_acc: 0.8929 - val_loss: 0.3943 - val_s_pred_loss: 0.3834 - val_d_pred_loss: 0.2726 - val_s_pred_acc: 0.8310 - val_d_pred_acc: 0.9133
+Epoch 19/100
+- updates: 1e-3 * [-, 0.5637, -, 2.5362, 27.9141, 11.8493, 21.0090, -, -, -, -, 25.3263, -, 17.3085, 11.2698]
+312s - loss: 0.2923 - s_pred_loss: 0.2795 - d_pred_loss: 0.3215 - s_pred_acc: 0.8839 - d_pred_acc: 0.8832 - val_loss: 0.3801 - val_s_pred_loss: 0.3697 - val_d_pred_loss: 0.2612 - val_s_pred_acc: 0.8448 - val_d_pred_acc: 0.9083
+Epoch 20/100
+- updates: 1e-3 * [-, 0.5669, -, 2.3148, 26.9378, 12.3292, 20.8383, -, -, -, -, 23.1439, -, 13.0320, 9.1952]
+
+Epoch 00019: reducing learning rate to 0.1.
+313s - loss: 0.2894 - s_pred_loss: 0.2778 - d_pred_loss: 0.2878 - s_pred_acc: 0.8882 - d_pred_acc: 0.8957 - val_loss: 0.3956 - val_s_pred_loss: 0.3850 - val_d_pred_loss: 0.2635 - val_s_pred_acc: 0.8379 - val_d_pred_acc: 0.9121
+Epoch 21/100
+- updates: 1e-3 * [-, 0.0588, -, 0.2637, 3.9835, 2.1419, 3.2835, -, -, -, -, 3.7166, -, 1.0148, 1.7392]
+312s - loss: 0.2503 - s_pred_loss: 0.2397 - d_pred_loss: 0.2644 - s_pred_acc: 0.9027 - d_pred_acc: 0.9066 - val_loss: 0.3706 - val_s_pred_loss: 0.3606 - val_d_pred_loss: 0.2487 - val_s_pred_acc: 0.8474 - val_d_pred_acc: 0.9152
+Epoch 22/100
+- updates: 1e-3 * [-, 0.0561, -, 0.2601, 3.2638, 1.6494, 2.8004, -, -, -, -, 2.6529, -, 1.3778, 1.3382]
+311s - loss: 0.2470 - s_pred_loss: 0.2367 - d_pred_loss: 0.2580 - s_pred_acc: 0.9055 - d_pred_acc: 0.9095 - val_loss: 0.3656 - val_s_pred_loss: 0.3556 - val_d_pred_loss: 0.2509 - val_s_pred_acc: 0.8486 - val_d_pred_acc: 0.9146
+Epoch 00021: early stopping
+
+Test evaluation:
+boo acc: 0.8960
+dvd acc: 0.8614
+ele acc: 0.8713
+kit acc: 0.8960
+
+process finished ~~~
