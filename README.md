@@ -32,7 +32,7 @@ Notice: you should first download the MDSD dataset and [glove](https://nlp.stanf
 
  - `data_helper.py` data loader for the MDSD dataset
  - `model.py` the domain attention model, train and test
- - `utils` misc util functions
+ - `utils.py` misc util functions
  
  
 For any issues, you can contact me via [yuanzg14@mails.tsinghua.edu.cn](mailto:yuanzg14@mails.tsinghua.edu.cn)
