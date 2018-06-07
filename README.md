@@ -1,6 +1,6 @@
 # Domain Attention
 
-Domain Attention Model proposed in paper *"Domain Attention Model for Multi-Domain Sentiment Classification"*, which is accepted by [*Knowledge Based Systems*](https://www.journals.elsevier.com/knowledge-based-systems/) (to be appeared).
+Domain Attention Model proposed in paper *"Domain Attention Model for Multi-Domain Sentiment Classification"* ([link](https://www.sciencedirect.com/science/article/pii/S0950705118302144)), which is accepted by [*Knowledge Based Systems*](https://www.journals.elsevier.com/knowledge-based-systems/).
 
 ## Data
 
